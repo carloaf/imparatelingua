@@ -1,0 +1,155 @@
+{
+  "exam": {
+    "name": "CILS B1",
+    "level": "B1",
+    "year": 2024,
+    "description": "Certificação de Italiano como Língua Estrangeira - Nível B1"
+  },
+  "questions": [
+    {
+      "category": "gramatica",
+      "question_text": "Completa la frase: Se io _____ ricco, comprerei una casa al mare.",
+      "question_type": "multiple_choice",
+      "difficulty": 3,
+      "context": "Congiuntivo imperfetto - Período hipotético da irrealidade no presente",
+      "order": 1,
+      "explanation": "Em períodos hipotéticos que expressam algo improvável ou impossível no presente, usa-se o congiuntivo imperfetto na subordinada e o condizionale presente na principal.",
+      "answers": [
+        {
+          "answer_text": "fossi",
+          "is_correct": true,
+          "order": 1,
+          "justification": "Correto! 'Fossi' é o congiuntivo imperfetto de 'essere', usado para expressar hipóteses irreais no presente."
+        },
+        {
+          "answer_text": "sia",
+          "is_correct": false,
+          "order": 2,
+          "justification": "Incorreto. 'Sia' é congiuntivo presente, usado para hipóteses possíveis ou em subordinadas de verbos de opinião."
+        },
+        {
+          "answer_text": "sono",
+          "is_correct": false,
+          "order": 3,
+          "justification": "Incorreto. 'Sono' é indicativo presente, não pode ser usado em períodos hipotéticos irreais."
+        },
+        {
+          "answer_text": "ero",
+          "is_correct": false,
+          "order": 4,
+          "justification": "Incorreto. 'Ero' é imperfetto indicativo, usado para descrever ações habituais no passado, não para hipóteses."
+        }
+      ]
+    },
+    {
+      "category": "vocabulario",
+      "question_text": "Come si dice 'guardar rancor' em italiano?",
+      "question_type": "multiple_choice",
+      "difficulty": 2,
+      "context": "Expressões idiomáticas relacionadas a sentimentos",
+      "order": 2,
+      "explanation": "Esta é uma expressão idiomática italiana relacionada a manter ressentimento.",
+      "answers": [
+        {
+          "answer_text": "Serbare rancore",
+          "is_correct": true,
+          "order": 1,
+          "justification": "Correto! 'Serbare rancore' é a expressão idiomática italiana para 'guardar rancor'."
+        },
+        {
+          "answer_text": "Guardare rancore",
+          "is_correct": false,
+          "order": 2,
+          "justification": "Incorreto. Tradução literal do português, mas não é a expressão usada em italiano."
+        },
+        {
+          "answer_text": "Tenere rabbia",
+          "is_correct": false,
+          "order": 3,
+          "justification": "Incorreto. 'Rabbia' é raiva, não rancor. Além disso, não é a expressão correta."
+        },
+        {
+          "answer_text": "Mantenere odio",
+          "is_correct": false,
+          "order": 4,
+          "justification": "Incorreto. 'Odio' (ódio) é muito mais forte que rancor, e não é a expressão idiomática."
+        }
+      ]
+    },
+    {
+      "category": "gramatica",
+      "question_text": "Quale preposizione va usata? Vado _____ scuola.",
+      "question_type": "fill_in_blank",
+      "difficulty": 1,
+      "context": "Preposições de lugar com verbos de movimento",
+      "order": 3,
+      "explanation": "O verbo 'andare' (ir) com lugares específicos requer a preposição 'a' em italiano.",
+      "answers": [
+        {
+          "answer_text": "a",
+          "is_correct": true,
+          "order": 1,
+          "justification": "Correto! 'Andare a' é usado para indicar movimento em direção a um lugar específico. Outros exemplos: vado a casa, vado al cinema."
+        }
+      ]
+    },
+    {
+      "category": "interpretacao",
+      "question_text": "Secondo il testo, Marco preferisce:",
+      "question_type": "multiple_choice",
+      "difficulty": 2,
+      "context": "Testo: \"Marco è uno studente universitario. Nei fine settimana, preferisce stare a casa a leggere libri piuttosto che uscire con gli amici. Gli piace soprattutto la letteratura italiana del Novecento.\"",
+      "order": 4,
+      "explanation": "Esta questão testa a compreensão de preferências expressas no texto.",
+      "answers": [
+        {
+          "answer_text": "Ficar em casa lendo livros",
+          "is_correct": true,
+          "order": 1,
+          "justification": "Correto! O texto diz claramente 'preferisce stare a casa a leggere libri' (prefere ficar em casa lendo livros)."
+        },
+        {
+          "answer_text": "Sair com os amigos",
+          "is_correct": false,
+          "order": 2,
+          "justification": "Incorreto. O texto usa 'piuttosto che' (em vez de), indicando que ele prefere ficar em casa."
+        },
+        {
+          "answer_text": "Ir ao cinema",
+          "is_correct": false,
+          "order": 3,
+          "justification": "Incorreto. O cinema não é mencionado no texto como preferência de Marco."
+        },
+        {
+          "answer_text": "Estudar na biblioteca",
+          "is_correct": false,
+          "order": 4,
+          "justification": "Incorreto. Embora ele seja estudante, o texto fala especificamente sobre ler em casa nos finais de semana."
+        }
+      ]
+    },
+    {
+      "category": "gramatica",
+      "question_text": "Il participio passato di 'aprire' è 'aperto'",
+      "question_type": "true_false",
+      "difficulty": 2,
+      "context": "Verbos irregulares - Participio passato",
+      "order": 5,
+      "explanation": "Alguns verbos italianos têm particípio passado irregular que deve ser memorizado.",
+      "answers": [
+        {
+          "answer_text": "true",
+          "is_correct": true,
+          "order": 1,
+          "justification": "Correto! 'Aprire' tem particípio passado irregular 'aperto'. Outros exemplos: fare-fatto, dire-detto, scrivere-scritto."
+        },
+        {
+          "answer_text": "false",
+          "is_correct": false,
+          "order": 2,
+          "justification": "Incorreto. Se fosse regular, seria 'aprito', mas o correto é 'aperto' (irregular)."
+        }
+      ]
+    }
+  ]
+}

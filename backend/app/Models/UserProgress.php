@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class UserProgress extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'question_id',
+        'selected_answer_id',
+        'is_correct',
+        'answered_at',
+    ];
+
+    protected $casts = [
+        'is_correct' => 'boolean',
+        'answered_at' => 'datetime',
+    ];
+
+    /**
+     * Usuário que respondeu
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Questão respondida
+     */
+    public function question()
+    {
+        return $this->belongsTo(Question::class);
+    }
+
+    /**
+     * Resposta selecionada pelo usuário
+     */
+    public function selectedAnswer()
+    {
+        return $this->belongsTo(Answer::class, 'selected_answer_id');
+    }
+}

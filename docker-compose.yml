@@ -1,0 +1,74 @@
+# version: '3.8' // sempre comentar essa linha para evitar problemas de compatibilidade entre diferentes versões do Docker Compose
+
+services:
+  # Serviço do Backend (API com Laravel/PHP)
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: app-italiano-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./backend:/var/www
+    networks:
+      - app-italiano-network
+
+  # Serviço do Servidor Web (Nginx)
+  nginx:
+    image: nginx:1.19-alpine
+    container_name: app-italiano-nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80" # Acessaremos a aplicação em http://localhost:8080
+    volumes:
+      - ./backend:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+      - db
+    networks:
+      - app-italiano-network
+
+  # Serviço do Banco de Dados (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: app-italiano-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: app_italiano_db
+      MYSQL_ROOT_PASSWORD: root_password # Use uma senha segura em produção
+      MYSQL_PASSWORD: user_password    # Use uma senha segura em produção
+      MYSQL_USER: app_user
+    volumes:
+      - app-italiano-db-data:/var/lib/mysql
+    ports:
+      - "33061:3306" # Porta externa para conectar com um client de DB
+    networks:
+      - app-italiano-network
+
+  # Serviço do Frontend (Vue.js com Vite)
+  frontend:
+    image: node:20-alpine
+    container_name: app-italiano-frontend
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Volume anônimo para node_modules (evita conflitos de permissão)
+    ports:
+      - "5173:5173" # Porta do Vite dev server
+    command: sh -c "npm install && npm run dev -- --host"
+    networks:
+      - app-italiano-network
+    depends_on:
+      - nginx
+
+# Define a rede que permitirá a comunicação entre os containers
+networks:
+  app-italiano-network:
+    driver: bridge
+
+# Define o volume para persistir os dados do banco de dados
+volumes:
+  app-italiano-db-data:

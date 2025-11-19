@@ -671,10 +671,145 @@ Este documento será atualizado conforme o desenvolvimento progride. Mantenha-o 
 - [x] Implementação da API REST
 - [x] Setup do Frontend Vue.js
 - [x] Integração Frontend + Backend
+- [x] Repositório Git criado e publicado no GitHub
+- [x] Branch de desenvolvimento (dev) criada
 - [ ] Sistema de autenticação
 - [ ] Importação de provas CILS reais
 - [ ] Sistema de gamificação
 - [ ] Deploy em produção
+
+## 14. ✅ Controle de Versão com Git/GitHub
+
+**Status: IMPLEMENTADO EM 19/11/2025**
+
+### Repositório Configurado:
+
+✅ **Estrutura Git**
+- Repositório: https://github.com/carloaf/imparatelingua
+- Branch principal: `main` (produção)
+- Branch de desenvolvimento: `dev`
+- Commit inicial: 162 arquivos, 27.934 linhas de código
+
+✅ **Branches Estratégicas:**
+
+**`main` (Produção)**
+- Código estável e testado
+- Protected branch (recomendado)
+- Deploy automático (futuro)
+- Apenas via Pull Request
+
+**`dev` (Desenvolvimento)**
+- Branch ativa para desenvolvimento
+- Testes e features novas
+- Merge na main após aprovação
+- Base para feature branches
+
+### Workflow de Desenvolvimento:
+
+```bash
+# 1. Sempre trabalhar na branch dev ou feature
+git checkout dev
+
+# 2. Criar feature branch para nova funcionalidade
+git checkout -b feature/nome-da-feature
+
+# 3. Desenvolver e fazer commits
+git add .
+git commit -m "feat: Descrição da funcionalidade"
+
+# 4. Push da feature branch
+git push -u origin feature/nome-da-feature
+
+# 5. Criar Pull Request no GitHub (feature → dev)
+
+# 6. Após aprovação e merge, atualizar dev local
+git checkout dev
+git pull
+
+# 7. Deletar feature branch local
+git branch -d feature/nome-da-feature
+
+# 8. Quando dev estiver estável, merge para main
+git checkout main
+git merge dev
+git push
+```
+
+### Convenções de Commit:
+
+Usando [Conventional Commits](https://www.conventionalcommits.org/):
+
+- `feat:` - Nova funcionalidade
+- `fix:` - Correção de bug
+- `docs:` - Documentação
+- `style:` - Formatação (sem mudança de código)
+- `refactor:` - Refatoração de código
+- `test:` - Testes
+- `chore:` - Manutenção, build, CI/CD
+- `perf:` - Melhorias de performance
+
+**Exemplos:**
+```bash
+git commit -m "feat: Adiciona suporte a questões de áudio"
+git commit -m "fix: Corrige highlight em questões fill_in_blank"
+git commit -m "docs: Atualiza guia de importação de questões"
+git commit -m "refactor: Otimiza carregamento de questões na API"
+```
+
+### Comandos Úteis:
+
+```bash
+# Ver branches locais e remotas
+git branch -a
+
+# Ver status
+git status
+
+# Ver diferenças
+git diff
+
+# Ver histórico
+git log --oneline --graph --all
+
+# Sincronizar com remoto
+git fetch --all
+git pull
+
+# Limpar branches locais já mergeadas
+git branch --merged | grep -v "\*" | xargs -n 1 git branch -d
+
+# Desfazer último commit (mantém alterações)
+git reset --soft HEAD~1
+
+# Atualizar branch dev com mudanças da main
+git checkout dev
+git merge main
+```
+
+### Proteção de Branches (Recomendado no GitHub):
+
+1. Acesse: `Settings` → `Branches` → `Add rule`
+2. Branch name pattern: `main`
+3. Marque:
+   - ✅ Require a pull request before merging
+   - ✅ Require approvals (1 approval)
+   - ✅ Dismiss stale pull request approvals
+   - ✅ Require status checks to pass
+   - ✅ Require conversation resolution before merging
+
+### Estrutura de Branches Futura:
+
+```
+main (produção)
+  ↑
+dev (desenvolvimento)
+  ↑
+feature/authentication
+feature/audio-support
+feature/gamification
+fix/highlight-issue
+docs/api-documentation
+```
 
 ---
 

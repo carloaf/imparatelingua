@@ -38,4 +38,12 @@ Route::prefix('v1')->group(function () {
     Route::get('user/statistics', [App\Http\Controllers\Api\UserProgressController::class, 'statistics']);
     Route::get('user/progress/{id}', [App\Http\Controllers\Api\UserProgressController::class, 'show']);
     Route::delete('user/progress/{id}', [App\Http\Controllers\Api\UserProgressController::class, 'destroy']);
+    
+    // Cursos e Lições
+    Route::get('courses', [App\Http\Controllers\Api\CourseController::class, 'index']);
+    Route::get('courses/{id}', [App\Http\Controllers\Api\CourseController::class, 'show']);
+    
+    Route::get('lessons/{id}', [App\Http\Controllers\Api\LessonController::class, 'show']);
+    Route::put('lessons/{id}/progress', [App\Http\Controllers\Api\LessonController::class, 'updateProgress']);
+    Route::post('lessons/{id}/complete', [App\Http\Controllers\Api\LessonController::class, 'complete']);
 });

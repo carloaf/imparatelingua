@@ -14,13 +14,44 @@
       </div>
     </div>
 
+    <!-- Main Options -->
+    <div class="container mx-auto px-4 mb-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <!-- Courses Card -->
+        <router-link
+          to="/courses"
+          class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg shadow-xl p-8 hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+        >
+          <div class="text-6xl mb-4">📚</div>
+          <h2 class="text-3xl font-bold mb-3">Cursos Estruturados</h2>
+          <p class="text-lg mb-4">Aprenda com lições organizadas e progressivas</p>
+          <div class="inline-block bg-white bg-opacity-20 px-4 py-2 rounded-full text-sm font-semibold">
+            Ver Cursos →
+          </div>
+        </router-link>
+
+        <!-- Exams Card -->
+        <router-link
+          to="/exams"
+          class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-lg shadow-xl p-8 hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+        >
+          <div class="text-6xl mb-4">🎯</div>
+          <h2 class="text-3xl font-bold mb-3">Provas CILS</h2>
+          <p class="text-lg mb-4">Pratique com questões oficiais de certificação</p>
+          <div class="inline-block bg-white bg-opacity-20 px-4 py-2 rounded-full text-sm font-semibold">
+            Ver Provas →
+          </div>
+        </router-link>
+      </div>
+    </div>
+
     <!-- Features -->
     <div class="container mx-auto px-4 mb-12">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="feature-card bg-white rounded-lg shadow-lg p-6 text-center">
-          <div class="text-5xl mb-4">📚</div>
-          <h3 class="text-xl font-bold mb-2">Múltiplos Níveis</h3>
-          <p class="text-gray-600">Exames de A1 a C2, seguindo o padrão CILS</p>
+          <div class="text-5xl mb-4">📖</div>
+          <h3 class="text-xl font-bold mb-2">Conteúdo Bilíngue</h3>
+          <p class="text-gray-600">Italiano com explicações em Português</p>
         </div>
 
         <div class="feature-card bg-white rounded-lg shadow-lg p-6 text-center">
@@ -30,9 +61,9 @@
         </div>
 
         <div class="feature-card bg-white rounded-lg shadow-lg p-6 text-center">
-          <div class="text-5xl mb-4">🎯</div>
-          <h3 class="text-xl font-bold mb-2">Feedback Imediato</h3>
-          <p class="text-gray-600">Saiba na hora se acertou ou errou</p>
+          <div class="text-5xl mb-4">✏️</div>
+          <h3 class="text-xl font-bold mb-2">Exercícios Práticos</h3>
+          <p class="text-gray-600">Pratique com exercícios contextualizados</p>
         </div>
       </div>
     </div>

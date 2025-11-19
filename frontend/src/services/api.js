@@ -79,4 +79,20 @@ export const progressService = {
   deleteProgress: (id) => api.delete(`/user/progress/${id}`)
 }
 
+// Serviços de Cursos (Lições)
+export const courseService = {
+  getAll: () => api.get('/courses'),
+  getById: (id, userId = 1) => api.get(`/courses/${id}`, { params: { user_id: userId } }),
+  create: (data) => api.post('/courses', data),
+  update: (id, data) => api.put(`/courses/${id}`, data),
+  delete: (id) => api.delete(`/courses/${id}`)
+}
+
+// Serviços de Lições
+export const lessonService = {
+  getById: (id, userId = 1) => api.get(`/lessons/${id}`, { params: { user_id: userId } }),
+  updateProgress: (id, data) => api.put(`/lessons/${id}/progress`, data),
+  complete: (id, userId = 1) => api.post(`/lessons/${id}/complete`, { user_id: userId })
+}
+
 export default api

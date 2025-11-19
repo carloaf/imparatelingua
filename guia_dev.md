@@ -673,6 +673,7 @@ Este documento será atualizado conforme o desenvolvimento progride. Mantenha-o 
 - [x] Integração Frontend + Backend
 - [x] Repositório Git criado e publicado no GitHub
 - [x] Branch de desenvolvimento (dev) criada
+- [x] Sistema de Lições Interativas (Backend + Frontend)
 - [ ] Sistema de autenticação
 - [ ] Importação de provas CILS reais
 - [ ] Sistema de gamificação
@@ -1282,3 +1283,169 @@ php artisan cils:parse "arquivo_extracted.txt" --category=Ascolto # Apenas uma c
 - [ ] Validador de JSON online
 - [ ] Sistema de templates de questões
 - [ ] Processamento em batch de múltiplos PDFs
+
+---
+
+## 15. ✅ Sistema de Lições Interativas Implementado
+
+**Status: IMPLEMENTADO EM 19/11/2025**
+
+O sistema de lições interativas foi desenvolvido completamente com backend e frontend integrados!
+
+### Backend Implementado:
+
+✅ **Estrutura do Banco de Dados:**
+- **Tabela `courses`**: Armazena cursos de italiano
+  - Campos: id, title, slug, description, level (A1-C2), image_url, is_active, order
+  - Relacionamento: hasMany lessons
+  
+- **Tabela `lessons`**: Armazena lições individuais
+  - Campos: course_id (FK), title, slug, content_italian (longText), content_portuguese (longText), exercises (JSON), lesson_type (enum), difficulty (1-5), estimated_time, order
+  - Suporta conteúdo bilíngue completo
+  - Exercícios armazenados em formato JSON flexível
+  
+- **Tabela `user_lesson_progress`**: Rastreia progresso do usuário
+  - Campos: user_id, lesson_id, status (not_started/in_progress/completed), time_spent, completion_percentage, exercises_completed, exercises_correct
+  - Timestamps: started_at, completed_at, last_accessed_at
+  - Auto-tracking: progresso atualizado automaticamente ao acessar lição
+
+✅ **Models com Relacionamentos:**
+- `Course`: hasMany lessons, userProgress method
+- `Lesson`: belongsTo course, hasMany userProgress, progressForUser method
+- `UserLessonProgress`: belongsTo user and lesson
+
+✅ **API Controllers:**
+- **CourseController**:
+  - `index()`: Lista todos os cursos ativos
+  - `show($id)`: Detalhes do curso com lições e progresso do usuário
+  
+- **LessonController**:
+  - `show($id)`: Retorna lição completa com tracking automático
+  - `updateProgress($id)`: Atualiza progresso (tempo, percentual, exercícios)
+  - `complete($id)`: Marca lição como 100% concluída
+
+✅ **Rotas API (`/api/v1/...`):**
+```
+GET    /api/v1/courses           - Lista cursos
+GET    /api/v1/courses/{id}      - Detalhes curso + lições + progresso
+GET    /api/v1/lessons/{id}      - Conteúdo lição + tracking
+PUT    /api/v1/lessons/{id}/progress  - Atualizar progresso
+POST   /api/v1/lessons/{id}/complete  - Marcar como concluída
+```
+
+✅ **Seeder com Dados Reais:**
+- Curso: "Italiano Básico 2025" (Nível A1, 3 lições, 95min total)
+- Lição 1: Alfabeto e Pronúncia (30min, dificuldade 1)
+- Lição 2: Saudações e Apresentações (25min, dificuldade 1)
+- Lição 3: Verbos ESSERE e AVERE (40min, dificuldade 2)
+- Conteúdo extraído de ConteudoItaliano2025.txt (3.872 linhas)
+
+### Frontend Implementado:
+
+✅ **Views Vue.js:**
+- **CourseListView.vue**: Listagem de cursos disponíveis
+  - Cards com informações do curso (título, descrição, nível)
+  - Badges coloridos por nível (A1-C2)
+  - Estatísticas: total de lições e tempo estimado
+  - Gradientes visuais atraentes
+  - Link para detalhes do curso
+  
+- **CourseDetailView.vue**: Detalhes do curso com lista de lições
+  - Header do curso com informações completas
+  - Lista de lições com índice numérico
+  - Badges por tipo de lição (teoria, gramática, vocabulário, etc.)
+  - Barra de progresso visual por lição
+  - Status da lição (não iniciado, em progresso, concluído)
+  - Botão para iniciar/revisar lição
+  
+- **LessonView.vue**: Interface de estudo da lição
+  - Sistema de tabs para alternar entre italiano e português
+  - Tab "Conteúdo em Italiano": Texto em italiano completo
+  - Tab "Explicação em Português": Explicações detalhadas
+  - Seção de exercícios com visualização clara
+  - Exibição de respostas corretas
+  - Ícones por tipo de exercício
+  - Botão "Marcar como Concluído" integrado com API
+  - Barra de progresso em tempo real
+
+✅ **Serviços API (api.js):**
+```javascript
+// courseService
+getAll()                    - Lista cursos
+getById(id, userId)         - Detalhes + progresso
+
+// lessonService
+getById(id, userId)         - Conteúdo + tracking
+updateProgress(id, data)    - Atualizar progresso
+complete(id, userId)        - Marcar concluída
+```
+
+✅ **Rotas Vue Router:**
+```
+/courses              → CourseListView
+/courses/:id          → CourseDetailView
+/lesson/:id           → LessonView
+```
+
+✅ **HomeView Atualizada:**
+- Dois cards principais:
+  - **Cursos Estruturados** (azul): Link para /courses
+  - **Provas CILS** (roxo): Link para /exams
+- Features destacando conteúdo bilíngue e exercícios práticos
+
+### Funcionalidades Implementadas:
+
+✅ **Conteúdo Bilíngue:**
+- Italiano: Conteúdo completo da lição em italiano
+- Português: Explicações detalhadas em português
+- Fácil alternância entre idiomas com tabs
+
+✅ **Tracking Automático de Progresso:**
+- Status atualizado ao acessar lição (not_started → in_progress)
+- Campo `last_accessed_at` registra último acesso
+- Barra de progresso visual (0-100%)
+- Botão para marcar como concluído
+
+✅ **Exercícios Contextualizados:**
+- Tipos suportados: pronunciation, fill_blank, multiple_choice, translate
+- Visualização de opções (quando aplicável)
+- Resposta correta destacada
+- Ícones identificando tipo de exercício
+
+✅ **Design Responsivo:**
+- Gradientes atraentes (blue-to-indigo)
+- Cards com sombras e efeitos hover
+- Badges coloridos por nível e tipo
+- Loading states e error handling
+- Animações suaves nas transições
+
+### Testado e Validado:
+
+✅ API retorna dados corretamente:
+```bash
+# Listar cursos
+curl http://localhost:8080/api/v1/courses
+# Resultado: 1 curso com 3 lições, 95min total
+
+# Detalhes do curso
+curl http://localhost:8080/api/v1/courses/1?user_id=1
+# Resultado: Curso com array de 3 lições + progresso
+
+# Detalhes da lição
+curl http://localhost:8080/api/v1/lessons/1?user_id=1
+# Resultado: Conteúdo italiano/português + exercícios + progresso
+```
+
+✅ Frontend acessível:
+- http://localhost:5173 - Interface Vue.js
+- http://localhost:8080/api/v1/... - API Laravel
+
+### Próximos Passos Sugeridos:
+
+- [ ] Importar mais lições do ConteudoItaliano2025.txt (páginas 4-7+)
+- [ ] Criar parser automático para importar lições do arquivo .txt
+- [ ] Implementar sistema de exercícios interativos (não apenas visualização)
+- [ ] Adicionar validação de respostas dos exercícios
+- [ ] Sistema de pontuação e feedback
+- [ ] Gráficos de progresso por curso
+- [ ] Certificados de conclusão

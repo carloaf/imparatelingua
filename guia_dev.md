@@ -2084,3 +2084,101 @@ docker compose exec app php artisan db:seed --class=AllModulesSeeder
 - Lições: 12
 - Exercícios: 21
 - Tempo Total: 303 minutos (5.1h)
+
+---
+
+## 18. ✅ Módulo de Preposições Reformatado Completamente
+
+**Status: IMPLEMENTADO EM 20/11/2025**
+
+O módulo de Preposições foi completamente reformatado com conteúdo HTML profissional e exercícios de alta qualidade!
+
+### ⚠️ Problema Identificado:
+
+- Conteúdo mal formatado com texto de exercícios não relacionados (café)
+- Apenas 1 exercício genérico
+- Estrutura confusa, difícil de estudar
+- Falta de organização visual
+
+### ✨ Solução Implementada:
+
+✅ **Script Especializado:** `fix_prepositions_module.py`
+- Conteúdo HTML profissional com seções claras
+- 12 exercícios de qualidade focados em preposições
+- Tabelas comparativas formatadas
+- Exemplos práticos contextualizados
+
+✅ **Estrutura do Conteúdo:**
+
+1. **Introdução:** Explicação sobre preposições
+2. **Tabela de Preposições Simples:** 8 preposições com significados e exemplos
+3. **Usos Principais de cada Preposição:**
+   - DI: Possesso, especificação, material, idade, proveniência, tempo
+   - A: Cidade/ilha, hora, destinatário, início de ação, movimento
+   - DA: Proveniência, casa/trabalho, início temporal, finalidade
+   - IN: País/região, dentro, estação/mês, tempo, transporte
+   - CON, SU, PER, TRA/FRA: Companhia, instrumento, posição, argumento, duração, direção
+
+4. **Preposições Articuladas:** Tabela completa com todas as combinações
+5. **Quando Usar:** Regras de quando usar simples vs articulada
+6. **Lugares Comuns:** Lista de expressões com IN e A
+7. **Erros Comuns:** Lista de erros típicos e correções
+
+✅ **12 Exercícios Criados:**
+
+1. Vado ___ cinema (al/nel/del/sul)
+2. Maria viene ___ Francia (dalla/della/alla/nella)
+3. Abito ___ Italia ___ tre anni (in/da vs a/per)
+4. Il libro è ___ tavolo ___ cucina (sul/della)
+5. Vado ___ Roma ___ treno (a/in)
+6. Studio italiano ___ due ore (per/da/in/a)
+7. Lavoro ___ lunedì ___ venerdì (da/a)
+8. Scrivo una lettera ___ mia madre (a/per/alla/da)
+9. Il treno arriva ___ dieci minuti (tra/per/in/da)
+10. ___ mattina bevo sempre un caffè (Di/In/A/La)
+11. Vado ___ medico (dal/al/nel/col)
+12. Questo è un regalo ___ mia sorella (per/a/da/di)
+
+**Todos com explicações detalhadas em português!**
+
+### 📊 Resultados:
+
+- **Lição ID:** 36
+- **Exercícios:** 12 (antes: 1)
+- **Tempo estimado:** 40 minutos (antes: 23)
+- **Dificuldade:** 2/5 (A2)
+- **Conteúdo:** HTML formatado com CSS customizado
+
+### 🎨 Melhorias Visuais:
+
+- Tabelas com header colorido e hover effects
+- Seções organizadas com cores distintas
+- Listas com ícones de check verde
+- Box de erros comuns destacado
+- Layout responsivo em duas colunas
+- Estilos CSS inline para garantir renderização
+
+### 📝 Comandos Executados:
+
+```bash
+# Reformatar módulo
+python3 backend/scripts/fix_prepositions_module.py
+
+# Deletar lição antiga
+docker compose exec app php artisan tinker --execute="DB::table('lessons')->where('id', 30)->delete();"
+
+# Importar módulo reformatado
+docker compose exec app php artisan db:seed --class=PreposicoesSeeder
+```
+
+### ✅ Resultado Final:
+
+O módulo agora oferece:
+- ✅ Conteúdo didático organizado
+- ✅ Tabelas de referência completas
+- ✅ 12 exercícios práticos
+- ✅ Explicações em português
+- ✅ Exemplos contextualizados
+- ✅ Visual profissional
+
+**Pronto para aprendizado efetivo! 🎓**

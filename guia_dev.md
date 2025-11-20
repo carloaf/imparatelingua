@@ -2182,3 +2182,311 @@ O módulo agora oferece:
 - ✅ Visual profissional
 
 **Pronto para aprendizado efetivo! 🎓**
+
+## 20. Extração de Exercícios do PDF e Suporte a Fill-in-Blank (20/11/2025)
+
+### Objetivo
+Extrair exercícios adicionais das páginas finais do PDF ItalB1-25 e adicionar suporte no frontend para exercícios do tipo `fill_in_blank`.
+
+### Problema Inicial
+- Apenas 33 exercícios distribuídos em 12 módulos (média de 2,75 por módulo)
+- PDF contém seção "Soluzioni esercizi" (pag. 72-75) com gabaritos
+- Frontend não suportava exercícios `fill_in_blank` (sem opções para marcar)
+
+### Análise do PDF
+
+**Arquivo**: `backend/storage/app/imports/ItalB1-25.txt` (8.475 linhas)
+
+**Seção de Soluções Encontrada** (linha 3850):
+- Página 37: Verbos no presente
+- Página 42: Preposições simples (30 questões)
+- Página 46: Aggettivi dimostrativi (10 questões)
+- Página 46: Preposições articuladas (30 questões)
+- Página 47: Le Vacanze degli Italiani - Multiple choice (9 questões)
+- Página 47: Le Vacanze degli Italiani - Vero/Falso (10 questões)
+- Página 62: Passato prossimo verbos modais
+- Página 63: Artigos partitivos
+
+### Extração Estruturada
+
+**Arquivo JSON Criado**: `backend/storage/app/imports/exercises_extracted/extracted_exercises.json`
+
+```json
+{
+  "extracted_exercises": {
+    "preposizioni_semplici_pag42": {
+      "module_id": 36,
+      "exercise_type": "fill_in_blank",
+      "source_page": 42,
+      "exercises": [6 exercícios]
+    },
+    "vacanze_multiple_choice_pag47": {
+      "module_id": 36,
+      "exercise_type": "multiple_choice",
+      "source_page": 47,
+      "exercises": [3 exercícios]
+    },
+    "aggettivi_dimostrativi_pag46": {
+      "module_id": 31,
+      "exercise_type": "multiple_choice",
+      "source_page": 46,
+      "exercises": [4 exercícios]
+    },
+    "passato_prossimo_modali_pag62": {
+      "module_id": 32,
+      "exercise_type": "fill_in_blank",
+      "source_page": 62,
+      "exercises": [3 exercícios]
+    }
+  }
+}
+```
+
+### Seeder de Importação
+
+**Arquivo**: `backend/database/seeders/PdfExercisesSeeder.php`
+
+**Funcionalidades**:
+- Lê JSON estruturado com exercícios extraídos
+- Cria registros em `questions` e `answers`
+- Suporta `multiple_choice`, `fill_in_blank`, `true_false`
+- Incrementa `order` baseado no máximo existente
+- Define `category_id = 1` (Gramática)
+
+**Execução**:
+```bash
+docker compose exec app php artisan db:seed --class=PdfExercisesSeeder
+```
+
+**Resultado**:
+```
+✅ Importação concluída!
+📊 Estatísticas:
+   • Total de exercícios: 16
+   • Total de respostas: 37
+   • Módulos atualizados: 3
+
+📈 Contagem de exercícios por módulo:
+   • Preposições Simples e Articuladas: 21 exercícios
+   • Pronomes (Pessoais, Possessivos, Demonstrativos): 5 exercícios
+   • Passato Prossimo: 4 exercícios
+```
+
+### Suporte a Fill-in-Blank no Frontend
+
+**Arquivo**: `frontend/src/views/LessonView.vue`
+
+#### 1. Template - Campo de Input
+
+Adicionado bloco para exercícios `fill_in_blank`:
+
+```vue
+<!-- Fill in the Blank Input -->
+<div v-else-if="exercise.question_type === 'fill_in_blank'" class="space-y-3">
+  <div class="flex gap-3">
+    <input
+      v-model="fillInAnswers[index]"
+      :disabled="exerciseAnswers[index] !== null"
+      @keyup.enter="submitFillInAnswer(index)"
+      type="text"
+      placeholder="Digite sua resposta..."
+      class="flex-1 px-4 py-3 border-2 rounded-lg"
+    />
+    <button
+      @click="submitFillInAnswer(index)"
+      :disabled="!fillInAnswers[index]?.trim()"
+      class="px-6 py-3 bg-blue-500 text-white rounded-lg"
+    >
+      Verificar
+    </button>
+  </div>
+</div>
+```
+
+#### 2. Script - Variáveis e Funções
+
+**Variável adicionada**:
+```javascript
+const fillInAnswers = ref([]) // Armazena respostas de texto
+```
+
+**Função nova - submitFillInAnswer**:
+```javascript
+const submitFillInAnswer = (exerciseIndex) => {
+  const exercise = lesson.value.exercises[exerciseIndex]
+  const userAnswer = fillInAnswers.value[exerciseIndex]?.trim().toLowerCase()
+  const correctAnswer = exercise.correct_answer?.trim().toLowerCase()
+  
+  // Comparação case-insensitive
+  const isCorrect = userAnswer === correctAnswer
+  
+  // 1 = correto, 0 = incorreto
+  exerciseAnswers.value[exerciseIndex] = isCorrect ? 1 : 0
+}
+```
+
+**Atualização - getCorrectAnswerIndex**:
+```javascript
+const getCorrectAnswerIndex = (exerciseIndex) => {
+  const exercise = lesson.value.exercises[exerciseIndex]
+  
+  // Para fill_in_blank, retorna 1 (usado em comparações)
+  if (exercise?.question_type === 'fill_in_blank') {
+    return 1
+  }
+  
+  // Para multiple_choice, busca índice da opção correta
+  return exercise.options.findIndex(option => option.is_correct === true)
+}
+```
+
+**Atualização - correctAnswers computed**:
+```javascript
+const correctAnswers = computed(() => {
+  return exerciseAnswers.value.filter((answer, index) => {
+    if (answer === null) return false
+    
+    const exercise = lesson.value.exercises[index]
+    
+    // fill_in_blank: answer é 1 (correto) ou 0 (incorreto)
+    if (exercise?.question_type === 'fill_in_blank') {
+      return answer === 1
+    }
+    
+    // multiple_choice: comparar com índice correto
+    return answer === getCorrectAnswerIndex(index)
+  }).length
+})
+```
+
+#### 3. Feedback - Resposta Correta
+
+```vue
+<strong>Resposta correta:</strong> 
+<span v-if="exercise.question_type === 'fill_in_blank'">
+  {{ exercise.correct_answer }}
+</span>
+<span v-else>
+  {{ exercise.options[getCorrectAnswerIndex(index)]?.text }}
+</span>
+```
+
+### Estrutura de Dados da API
+
+**Exercício fill_in_blank**:
+```json
+{
+  "id": 1221,
+  "question_text": "Vado ___ cinema con gli amici.",
+  "question_type": "fill_in_blank",
+  "difficulty": 2,
+  "order": 13,
+  "explanation": "A + IL = AL. Para indicar direção/destino.",
+  "correct_answer": "al"
+}
+```
+
+**Diferença para multiple_choice**:
+- ❌ Não tem array `options`
+- ✅ Tem string `correct_answer`
+- ✅ Feedback com explicação em `explanation`
+
+### Estatísticas Finais
+
+#### Antes:
+```
+Total: 33 exercícios
+- Módulo 24 (Alfabeto): 8
+- Módulo 25 (Saudações): 2
+- Módulo 26 (Verbos): 2
+- Módulo 27 (Artigos): 1
+- Módulo 28 (Números): 1
+- Módulo 29 (Verbos Regulares): 1
+- Módulo 31 (Pronomes): 1
+- Módulo 32 (Passato): 1
+- Módulo 33 (Imperfetto): 1
+- Módulo 34 (Futuro): 1
+- Módulo 35 (Condizionale): 1
+- Módulo 36 (Preposições): 12
+```
+
+#### Depois:
+```
+Total: 49 exercícios (+48% 🎉)
+- Módulo 36 (Preposições): 21 (+9)
+- Módulo 31 (Pronomes): 5 (+4)
+- Módulo 32 (Passato): 4 (+3)
+- Demais módulos: 19 (inalterados)
+```
+
+### Arquivos Criados/Modificados
+
+1. **backend/database/seeders/PdfExercisesSeeder.php** (127 linhas)
+   - Seeder para importar exercícios extraídos do PDF
+
+2. **backend/scripts/extract_pdf_exercises.py** (279 linhas)
+   - Script Python para análise e extração automática
+   - Parse de diferentes formatos de resposta
+   - Geração de JSON estruturado
+
+3. **backend/storage/app/imports/exercises_extracted/extracted_exercises.json**
+   - 16 exercícios estruturados em 4 grupos
+   - Mapeamento para módulos específicos
+
+4. **frontend/src/views/LessonView.vue** (+65 linhas)
+   - Suporte a `fill_in_blank` com input text
+   - Validação case-insensitive
+   - Feedback visual (verde/vermelho)
+
+### Testes Realizados
+
+#### Teste 1: Módulo 36 (Preposições)
+```bash
+curl http://localhost:8080/api/v1/lessons/36 | jq '.exercises | length'
+# Resultado: 21 exercícios
+```
+
+**Exercício 13** (fill_in_blank):
+```
+Questão: "Vado ___ cinema con gli amici."
+Input: al
+Resultado: ✅ Correto!
+Explicação: "A + IL = AL. Para indicar direção/destino."
+```
+
+#### Teste 2: Módulo 31 (Pronomes)
+```bash
+curl http://localhost:8080/api/v1/lessons/31 | jq '.exercises | length'
+# Resultado: 5 exercícios (antes: 1)
+```
+
+#### Teste 3: Módulo 32 (Passato Prossimo)
+```bash
+curl http://localhost:8080/api/v1/lessons/32 | jq '.exercises | length'
+# Resultado: 4 exercícios (antes: 1)
+```
+
+### Próximos Passos Sugeridos
+
+1. **Extrair mais exercícios do PDF** (páginas 37, 63)
+   - Verbos no presente: ~20 exercícios
+   - Artigos partitivos: ~15 exercícios
+
+2. **Criar exercícios originais** para módulos com poucos:
+   - Módulos 27, 28, 29, 33, 34, 35: apenas 1 exercício cada
+   - Meta: mínimo 5 exercícios por módulo
+
+3. **Adicionar outros tipos de exercício**:
+   - `true_false` (Vero/Falso)
+   - `matching` (Associação)
+   - `ordering` (Ordenação)
+
+4. **Implementar sistema de pontuação**:
+   - Salvar progresso de exercícios no banco
+   - Relatório de desempenho por módulo
+   - Gamificação com níveis e badges
+
+### Commits
+
+- `5e565f6` - feat: Adicionar suporte a exercícios fill_in_blank
+

@@ -94,7 +94,7 @@
               </div>
 
               <!-- Exercise Options (for multiple choice) -->
-              <div v-if="exercise.options" class="space-y-2">
+              <div v-if="exercise.options && exercise.question_type === 'multiple_choice'" class="space-y-2">
                 <button
                   v-for="(option, optIndex) in exercise.options"
                   :key="optIndex"
@@ -111,6 +111,31 @@
                     {{ getOptionIcon(index, optIndex) }}
                   </span>
                 </button>
+              </div>
+
+              <!-- Fill in the Blank Input -->
+              <div v-else-if="exercise.question_type === 'fill_in_blank'" class="space-y-3">
+                <div class="flex gap-3">
+                  <input
+                    v-model="fillInAnswers[index]"
+                    :disabled="exerciseAnswers[index] !== null"
+                    @keyup.enter="submitFillInAnswer(index)"
+                    type="text"
+                    placeholder="Digite sua resposta..."
+                    class="flex-1 px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-blue-500"
+                    :class="exerciseAnswers[index] !== null 
+                      ? (exerciseAnswers[index] === 1 ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50')
+                      : 'border-gray-300'"
+                  />
+                  <button
+                    v-if="exerciseAnswers[index] === null"
+                    @click="submitFillInAnswer(index)"
+                    :disabled="!fillInAnswers[index]?.trim()"
+                    class="px-6 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Verificar
+                  </button>
+                </div>
               </div>
 
               <!-- Exercise Feedback -->
@@ -147,7 +172,9 @@
                           ? 'text-green-700' 
                           : 'text-red-700'"
                       >
-                        <strong>Resposta correta:</strong> {{ exercise.options[getCorrectAnswerIndex(index)]?.text || exercise.options[getCorrectAnswerIndex(index)] }}
+                        <strong>Resposta correta:</strong> 
+                        <span v-if="exercise.question_type === 'fill_in_blank'">{{ exercise.correct_answer }}</span>
+                        <span v-else>{{ exercise.options[getCorrectAnswerIndex(index)]?.text || exercise.options[getCorrectAnswerIndex(index)] }}</span>
                       </p>
                     </div>
                   </div>
@@ -228,6 +255,7 @@ const completingLesson = ref(false)
 
 // Exercise interaction state
 const exerciseAnswers = ref([]) // Array to store selected answer index for each exercise
+const fillInAnswers = ref([]) // Array to store text answers for fill_in_blank exercises
 
 // Computed properties for exercise statistics
 const completedExercises = computed(() => {
@@ -237,7 +265,17 @@ const completedExercises = computed(() => {
 const correctAnswers = computed(() => {
   if (!lesson.value?.exercises) return 0
   return exerciseAnswers.value.filter((answer, index) => {
-    return answer !== null && answer === getCorrectAnswerIndex(index)
+    if (answer === null) return false
+    
+    const exercise = lesson.value.exercises[index]
+    
+    // For fill_in_blank, answer is 1 if correct, 0 if incorrect
+    if (exercise?.question_type === 'fill_in_blank') {
+      return answer === 1
+    }
+    
+    // For multiple_choice, compare with correct option index
+    return answer === getCorrectAnswerIndex(index)
   }).length
 })
 
@@ -281,8 +319,14 @@ const getExerciseIcon = (type) => {
 // Get the index of the correct answer for an exercise
 const getCorrectAnswerIndex = (exerciseIndex) => {
   const exercise = lesson.value.exercises[exerciseIndex]
-  if (!exercise?.options) return -1
   
+  // For fill_in_blank, return 1 if correct, 0 if incorrect
+  if (exercise?.question_type === 'fill_in_blank') {
+    return 1 // Used for comparison in feedback
+  }
+  
+  // For multiple_choice, find the correct option
+  if (!exercise?.options) return -1
   return exercise.options.findIndex(option => option.is_correct === true)
 }
 
@@ -291,6 +335,21 @@ const selectAnswer = (exerciseIndex, optionIndex) => {
   if (exerciseAnswers.value[exerciseIndex] !== null) return // Already answered
   
   exerciseAnswers.value[exerciseIndex] = optionIndex
+}
+
+// Handle fill_in_blank answer submission
+const submitFillInAnswer = (exerciseIndex) => {
+  if (exerciseAnswers.value[exerciseIndex] !== null) return // Already answered
+  
+  const exercise = lesson.value.exercises[exerciseIndex]
+  const userAnswer = fillInAnswers.value[exerciseIndex]?.trim().toLowerCase()
+  const correctAnswer = exercise.correct_answer?.trim().toLowerCase()
+  
+  // Check if answer is correct (case-insensitive comparison)
+  const isCorrect = userAnswer === correctAnswer
+  
+  // Store result: 1 for correct, 0 for incorrect
+  exerciseAnswers.value[exerciseIndex] = isCorrect ? 1 : 0
 }
 
 // Get CSS classes for exercise border based on answer state
@@ -377,9 +436,10 @@ const loadLesson = async () => {
     const response = await lessonService.getById(lessonId)
     lesson.value = response.data
     
-    // Initialize exercise answers array
+    // Initialize exercise answers arrays
     if (lesson.value.exercises) {
       exerciseAnswers.value = new Array(lesson.value.exercises.length).fill(null)
+      fillInAnswers.value = new Array(lesson.value.exercises.length).fill('')
     }
   } catch (err) {
     console.error('Erro ao carregar lição:', err)

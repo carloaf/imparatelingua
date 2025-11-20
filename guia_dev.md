@@ -1201,13 +1201,47 @@ cat backend/storage/app/imports/modules_extracted/modulo_01_alfabeto.json | jq
 - 📖 **85 páginas** do PDF processadas (1-85)
 - 🎯 **3 níveis** cobertos (A1, A2, B1)
 
+### Atualização: Conteúdo Reorganizado - Teoria + Exercícios Unidos (20/11/2025)
+
+✅ **REORGANIZAÇÃO COMPLETA COM EXERCÍCIOS**
+
+O conteúdo foi reorganizado para unir a teoria (páginas 1-85) com os exercícios correspondentes (páginas 86-174) em cada módulo!
+
+**Novo Script:** `backend/scripts/organize_content.py`
+- ✅ Separa conteúdo teórico dos exercícios
+- ✅ Associa automaticamente cada módulo aos seus exercícios
+- ✅ Identifica exercícios por padrões (E1, Ex1, Esercizio, etc.)
+- ✅ Cria JSON completo: teoria + exercícios + metadados
+
+**Resultado:** 132 exercícios identificados e organizados!
+
+**Nova pasta:** `backend/storage/app/imports/modules_organized/`
+
+**Estatísticas por Nível:**
+- **A1:** 5 módulos - 32.716 chars - 6 exercícios
+- **A2:** 4 módulos - 59.167 chars - 65 exercícios ⭐
+- **B1:** 3 módulos - 18.974 chars - 61 exercícios ⭐
+
+**Módulos com mais exercícios:**
+- Módulo 6 (Verbos Regulares): 53 exercícios
+- Módulo 12 (Condizionale): 35 exercícios
+- Módulo 11 (Futuro): 20 exercícios
+
+**Como executar:**
+```bash
+cd backend/storage/app/imports
+python3 ../../../scripts/organize_content.py ItalB1-25.txt modules_organized
+```
+
 **Próximos Passos:**
-1. ✅ Conteúdo extraído e organizado em 12 módulos
-2. [ ] Revisar e formatar conteúdo em HTML
-3. [ ] Adicionar traduções em português
-4. [ ] Criar exercícios para cada módulo (10-15 por módulo)
-5. [ ] Desenvolver seeder para importar módulos no banco
-6. [ ] Criar novo curso "Italiano Completo A1-B1"
+1. ✅ Conteúdo reorganizado com teoria + exercícios
+2. [ ] Revisar/limpar exercícios (artefatos de OCR)
+3. [ ] Formatar conteúdo em HTML com classes CSS
+4. [ ] Extrair gabaritos das páginas finais
+5. [ ] Criar seeder ModulosCompletosSeeder.php
+6. [ ] Importar no banco e testar frontend
+
+**Documentação Completa:** Ver `/backend/storage/app/imports/PLANO_IMPORTACAO_MODULOS.md`
 
 **Arquivos Disponíveis:**
 ```

@@ -88,9 +88,9 @@
                   <h3 class="text-lg font-semibold text-gray-900 mb-2">
                     Exercício {{ index + 1 }}
                   </h3>
-                  <p class="text-gray-700 whitespace-pre-wrap">{{ exercise.question }}</p>
+                  <p class="text-gray-700 whitespace-pre-wrap">{{ exercise.question_text || exercise.question }}</p>
                 </div>
-                <span class="ml-4 text-2xl">{{ getExerciseIcon(exercise.type) }}</span>
+                <span class="ml-4 text-2xl">{{ getExerciseIcon(exercise.question_type || exercise.type) }}</span>
               </div>
 
               <!-- Exercise Options (for multiple choice) -->
@@ -106,7 +106,7 @@
                   <span class="font-semibold mr-3 min-w-[2rem]">
                     {{ String.fromCharCode(65 + optIndex) }})
                   </span>
-                  <span class="flex-1">{{ option }}</span>
+                  <span class="flex-1">{{ option.text || option }}</span>
                   <span v-if="exerciseAnswers[index] !== null" class="ml-2">
                     {{ getOptionIcon(index, optIndex) }}
                   </span>
@@ -147,7 +147,7 @@
                           ? 'text-green-700' 
                           : 'text-red-700'"
                       >
-                        <strong>Resposta correta:</strong> {{ exercise.correct_answer }}
+                        <strong>Resposta correta:</strong> {{ exercise.options[getCorrectAnswerIndex(index)]?.text || exercise.options[getCorrectAnswerIndex(index)] }}
                       </p>
                     </div>
                   </div>
@@ -281,11 +281,9 @@ const getExerciseIcon = (type) => {
 // Get the index of the correct answer for an exercise
 const getCorrectAnswerIndex = (exerciseIndex) => {
   const exercise = lesson.value.exercises[exerciseIndex]
-  if (!exercise?.options || !exercise?.correct_answer) return -1
+  if (!exercise?.options) return -1
   
-  return exercise.options.findIndex(option => 
-    option.trim().toLowerCase() === exercise.correct_answer.trim().toLowerCase()
-  )
+  return exercise.options.findIndex(option => option.is_correct === true)
 }
 
 // Handle answer selection

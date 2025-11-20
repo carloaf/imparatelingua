@@ -674,6 +674,8 @@ Este documento será atualizado conforme o desenvolvimento progride. Mantenha-o 
 - [x] Repositório Git criado e publicado no GitHub
 - [x] Branch de desenvolvimento (dev) criada
 - [x] Sistema de Lições Interativas (Backend + Frontend)
+- [x] Lições de nível B1 importadas (Verbos Modais, Reflexivos, Avverbi di Frequenza)
+- [x] Estilização avançada do conteúdo das lições
 - [ ] Sistema de autenticação
 - [ ] Importação de provas CILS reais
 - [ ] Sistema de gamificação
@@ -814,7 +816,140 @@ docs/api-documentation
 
 ---
 
-## 13. ✅ Frontend Vue.js Implementado
+## 13. ✅ Lições de Nível B1 Importadas
+
+**Status: IMPLEMENTADO EM 20/11/2025**
+
+Novas lições focadas em conteúdo B1 foram importadas do arquivo ConteudoItaliano2025.txt!
+
+### O que foi implementado:
+
+✅ **3 Novas Lições de Nível B1:**
+
+**Lição 4: Verbos Modais (Volere, Dovere, Potere)**
+- Conteúdo: Verbos modais italianos (volere, dovere, potere, sapere)
+- 7 exercícios de múltipla escolha
+- Dificuldade: 3/5
+- Tempo estimado: 35 minutos
+- Foco: Expressão de volontà, necessità e possibilità
+
+**Lição 5: Verbos Reflexivos (Verbi Riflessivi)**
+- Conteúdo: Verbi riflessivi e pronomi riflessivi
+- 6 exercícios de múltipla escolha
+- Dificuldade: 3/5
+- Tempo estimado: 30 minutos
+- Foco: Routine quotidiana e ações reflexivas
+
+**Lição 6: Avverbi di Frequenza e Routine**
+- Conteúdo: Advérbios de frequência e expressões temporais
+- 6 exercícios de múltipla escolha
+- Dificuldade: 2/5
+- Tempo estimado: 25 minutos
+- Foco: Descrição de hábitos e rotina diária
+
+✅ **Estilização Avançada do Conteúdo:**
+
+Foram adicionados estilos CSS personalizados para melhor visualização:
+
+- **Caixas de Introdução**: Background gradient roxo/azul
+- **Seções de Verbos**: Background cinza claro com borda azul
+- **Caixas de Regras**: Fundo azul claro com borda
+- **Dicas CILS B1**: Fundo amarelo com borda laranja
+- **Avisos Importantes**: Fundo vermelho claro
+- **Exemplos**: Fundo verde claro com borda
+- **Tabelas**: Estilizadas com cabeçalho azul
+- **Listas**: Com ícones de check verde
+- **Timeline**: Background verde claro com fonte monospace
+
+### Estrutura do Conteúdo HTML:
+
+As lições agora usam HTML formatado com classes CSS:
+
+```html
+<h2>Título Principal</h2>
+<div class="intro">Introdução destacada</div>
+<h3>Subtítulo com ícone</h3>
+<div class="verbs-section">Seção de verbos</div>
+<div class="rule-box">Regras importantes</div>
+<div class="tip-box">Dicas para CILS B1</div>
+<p class="example">Exemplo prático</p>
+```
+
+### Como executar o seeder:
+
+```bash
+# Importar lições B1
+docker compose exec app php artisan db:seed --class=LessonsB1Seeder
+```
+
+### Comandos úteis:
+
+```bash
+# Ver lições no banco de dados
+docker compose exec app php artisan tinker --execute="echo json_encode(\App\Models\Lesson::with('course')->get()->map(fn(\$l) => ['id' => \$l->id, 'title' => \$l->title, 'difficulty' => \$l->difficulty, 'time' => \$l->estimated_time]));"
+
+# Testar API de lições
+curl http://localhost:8080/api/v1/lessons/7?user_id=1
+```
+
+### Atualização: Sistema de Exercícios Interativos (19/11/2025)
+
+✅ **Exercícios agora são totalmente interativos!**
+
+Anteriormente os exercícios mostravam a resposta correta imediatamente. Agora o sistema funciona como um quiz real:
+
+**Funcionalidades implementadas:**
+- ✅ Usuário deve clicar em uma alternativa (A, B, C, D)
+- ✅ Feedback visual imediato após responder:
+  - Verde ✓ para resposta correta
+  - Vermelho ✗ para resposta incorreta
+  - Destaque da resposta correta em verde
+- ✅ Contador de progresso: "3/7 exercícios"
+- ✅ Taxa de acerto calculada automaticamente
+- ✅ Mensagens motivacionais: "🎉 Correto!" ou "❌ Incorreto"
+- ✅ Explicação do conceito após responder (quando disponível)
+- ✅ Não é possível mudar a resposta após selecionar
+- ✅ Border colorida no card do exercício (verde/vermelha)
+- ✅ Ícone 🏆 quando completa todos os exercícios
+
+**Interface melhorada:**
+```
+Exercícios (3/7)
+
+Exercício 1
+Claudia e Giovanni ________ partire per le vacanze.
+
+[A) vogliono]  ← Clicável antes de responder
+[B) voglio]    ← Hover azul
+[C) vuole]     ← Desabilitado após responder
+[D) volete]
+
+✓ Correto!
+Resposta correta: vogliono
+
+💡 Explicação:
+Com nomi plurali (loro), usa-se "vogliono"
+```
+
+**Estatísticas ao final:**
+```
+Progresso: 7/7 exercícios 🏆
+Taxa de acerto: 85% (6/7 corretas)
+```
+
+### Próximos Passos:
+
+- [ ] Importar mais lições (Passato Prossimo, Futuro, Condizionale)
+- [x] Adicionar exercícios interativos ✅ CONCLUÍDO
+- [ ] Importar provas CILS B1 oficiais
+- [ ] Sistema de salvamento do progresso no backend
+- [ ] Estatísticas de progresso por nível
+- [ ] Timer opcional para exercícios
+- [ ] Sistema de estrelas/pontos por desempenho
+
+---
+
+## 14. ✅ Frontend Vue.js Implementado
 
 **Status: IMPLEMENTADO EM 15/11/2025**
 

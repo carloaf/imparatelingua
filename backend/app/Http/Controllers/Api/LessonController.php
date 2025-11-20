@@ -38,13 +38,18 @@ class LessonController extends Controller
             $progress->update(['status' => 'in_progress']);
         }
 
+        // Ensure exercises is decoded as array
+        $exercises = is_string($lesson->exercises) 
+            ? json_decode($lesson->exercises, true) 
+            : $lesson->exercises;
+
         return response()->json([
             'id' => $lesson->id,
             'title' => $lesson->title,
             'slug' => $lesson->slug,
             'content_italian' => $lesson->content_italian,
             'content_portuguese' => $lesson->content_portuguese,
-            'exercises' => $lesson->exercises,
+            'exercises' => $exercises ?: [],
             'lesson_type' => $lesson->lesson_type,
             'difficulty' => $lesson->difficulty,
             'estimated_time' => $lesson->estimated_time,

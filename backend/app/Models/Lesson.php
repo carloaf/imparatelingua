@@ -23,11 +23,20 @@ class Lesson extends Model
     ];
 
     protected $casts = [
-        'exercises' => 'array',
+        'exercises' => 'json',
         'difficulty' => 'integer',
         'estimated_time' => 'integer',
         'order' => 'integer'
     ];
+    
+    // Accessor to ensure exercises is always an array
+    public function getExercisesAttribute($value)
+    {
+        if (is_string($value)) {
+            return json_decode($value, true) ?: [];
+        }
+        return $value ?: [];
+    }
 
     // Relacionamentos
     public function course()

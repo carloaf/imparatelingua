@@ -61,47 +61,11 @@
           </div>
         </div>
 
-        <!-- Tab Navigation -->
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <div class="flex border-b">
-            <button
-              @click="activeTab = 'italian'"
-              :class="[
-                'flex-1 py-4 px-6 text-center font-semibold transition-colors',
-                activeTab === 'italian'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-50'
-              ]"
-            >
-              🇮🇹 Conteúdo em Italiano
-            </button>
-            <button
-              @click="activeTab = 'portuguese'"
-              :class="[
-                'flex-1 py-4 px-6 text-center font-semibold transition-colors',
-                activeTab === 'portuguese'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-50'
-              ]"
-            >
-              🇧🇷 Explicação em Português
-            </button>
-          </div>
-
-          <!-- Tab Content -->
-          <div class="p-8">
-            <!-- Italian Content -->
-            <div v-show="activeTab === 'italian'" class="prose max-w-none">
-              <div class="text-lg leading-relaxed whitespace-pre-wrap">
-                {{ lesson.content_italian }}
-              </div>
-            </div>
-
-            <!-- Portuguese Content -->
-            <div v-show="activeTab === 'portuguese'" class="prose max-w-none">
-              <div class="text-lg leading-relaxed whitespace-pre-wrap">
-                {{ lesson.content_portuguese }}
-              </div>
+        <!-- Lesson Content -->
+        <div class="bg-white rounded-lg shadow-md p-8">
+          <div class="prose max-w-none">
+            <div class="text-lg leading-relaxed whitespace-pre-wrap">
+              {{ lesson.content_italian }}
             </div>
           </div>
         </div>
@@ -198,7 +162,6 @@ const router = useRouter()
 const lesson = ref(null)
 const loading = ref(true)
 const error = ref(null)
-const activeTab = ref('italian')
 const completingLesson = ref(false)
 
 const getLessonTypeBadge = (type) => {

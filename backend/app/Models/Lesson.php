@@ -53,4 +53,9 @@ class Lesson extends Model
     {
         return $this->userProgress()->where('user_id', $userId)->first();
     }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class)->orderBy('order');
+    }
 }

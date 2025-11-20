@@ -15,7 +15,7 @@ class LessonController extends Controller
      */
     public function show($id)
     {
-        $lesson = Lesson::with('course')->findOrFail($id);
+        $lesson = Lesson::with(['course', 'questions.answers'])->findOrFail($id);
         $userId = request()->user_id ?? 1; // TODO: Get from authenticated user
 
         // Get or create progress
@@ -38,10 +38,32 @@ class LessonController extends Controller
             $progress->update(['status' => 'in_progress']);
         }
 
-        // Ensure exercises is decoded as array
-        $exercises = is_string($lesson->exercises) 
-            ? json_decode($lesson->exercises, true) 
-            : $lesson->exercises;
+        // Format exercises from Questions table
+        $exercises = $lesson->questions->map(function ($question) {
+            $formattedQuestion = [
+                'id' => $question->id,
+                'question_text' => $question->question_text,
+                'question_type' => $question->question_type,
+                'difficulty' => $question->difficulty,
+                'order' => $question->order,
+                'explanation' => $question->context,
+            ];
+
+            if ($question->question_type === 'multiple_choice') {
+                $formattedQuestion['options'] = $question->answers->map(function ($answer) {
+                    return [
+                        'id' => $answer->id,
+                        'text' => $answer->answer_text,
+                        'is_correct' => $answer->is_correct,
+                    ];
+                })->toArray();
+            } elseif ($question->question_type === 'fill_in_blank') {
+                $correctAnswer = $question->answers->where('is_correct', true)->first();
+                $formattedQuestion['correct_answer'] = $correctAnswer ? $correctAnswer->answer_text : null;
+            }
+
+            return $formattedQuestion;
+        })->toArray();
 
         return response()->json([
             'id' => $lesson->id,
@@ -49,7 +71,7 @@ class LessonController extends Controller
             'slug' => $lesson->slug,
             'content_italian' => $lesson->content_italian,
             'content_portuguese' => $lesson->content_portuguese,
-            'exercises' => $exercises ?: [],
+            'exercises' => $exercises,
             'lesson_type' => $lesson->lesson_type,
             'difficulty' => $lesson->difficulty,
             'estimated_time' => $lesson->estimated_time,

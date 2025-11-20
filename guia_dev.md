@@ -949,6 +949,293 @@ Taxa de acerto: 85% (6/7 corretas)
 
 ---
 
+## 15. ✅ Extração de Conteúdo PDF com OCR
+
+**Status: IMPLEMENTADO EM 19/11/2025**
+
+Sistema de extração de texto de PDFs escaneados usando OCR (Tesseract) para aproveitar materiais didáticos importantes.
+
+### Ferramentas Instaladas:
+
+✅ **Tesseract OCR v5.3.4**
+- OCR engine com suporte a múltiplos idiomas
+- Pacote de idioma italiano instalado (`tesseract-ocr-ita`)
+- Pacote de idioma inglês instalado (`tesseract-ocr-eng`)
+
+✅ **Poppler Utils**
+- `pdftoppm`: Converte PDF para imagens PNG
+- Resolução configurável (300 DPI para melhor qualidade)
+
+✅ **ImageMagick**
+- Processamento de imagens
+- Suporte a múltiplos formatos
+
+### Script Python Desenvolvido:
+
+**Arquivo:** `backend/scripts/extract_pdf_ocr.py`
+
+**Funcionalidades:**
+- ✅ Conversão automática de PDF para imagens (uma por página)
+- ✅ OCR com Tesseract em cada página
+- ✅ Suporte a múltiplos idiomas (italiano, inglês, português)
+- ✅ Barra de progresso com contagem de caracteres por página
+- ✅ Geração de arquivo .txt com todo o conteúdo extraído
+- ✅ Limpeza automática de arquivos temporários
+- ✅ Tratamento de erros robusto
+- ✅ Preview do texto extraído
+
+**Uso do Script:**
+
+```bash
+# Sintaxe básica
+python3 backend/scripts/extract_pdf_ocr.py <arquivo.pdf> [saida.txt] [idioma]
+
+# Exemplos
+cd backend/storage/app/imports
+python3 ../../../scripts/extract_pdf_ocr.py ItalB1-25.pdf
+python3 ../../../scripts/extract_pdf_ocr.py ItalB1-25.pdf conteudo_extraido.txt ita
+
+# Idiomas suportados
+# ita = Italiano (padrão)
+# eng = Inglês
+# por = Português
+```
+
+### Extração Realizada:
+
+✅ **Arquivo Processado:** `ItalB1-25.pdf`
+- 📄 174 páginas processadas com sucesso
+- 📊 225.769 caracteres extraídos
+- 📊 8.475 linhas de texto
+- ⏱️ Tempo: ~3 minutos
+
+✅ **Conteúdo Identificado:**
+- Alfabeto Italiano completo
+- Fonética e pronúncia (C, G, CH, GH, GLI, SCI, GN)
+- Regras de gramática básica
+- Vocabulário essencial
+- Material didático estruturado para nível B1
+
+✅ **Arquivo Gerado:** `ItalB1-25.txt`
+- Organizado por páginas
+- Separadores visuais entre páginas
+- Formato UTF-8
+- Pronto para importação no sistema
+
+### Qualidade do OCR:
+
+**✅ Pontos Fortes:**
+- Texto principal extraído com alta precisão
+- Palavras em italiano reconhecidas corretamente
+- Estrutura preservada (títulos, parágrafos, listas)
+- Exemplos de vocabulário capturados
+
+**⚠️ Limitações:**
+- Algumas páginas com pouco texto/imagens retornaram vazio
+- Formatações especiais (tabelas complexas) podem perder estrutura
+- Símbolos especiais podem ter variações
+
+### Próximas Ações com o Conteúdo:
+
+**Sugerido:**
+1. **Revisar e formatar** o texto extraído
+2. **Criar novo seeder** para importar conteúdo do ItalB1-25.txt
+3. **Organizar em lições temáticas:**
+   - Alfabeto e Fonética
+   - Artigos e Gêneros
+   - Pronomes e Verbos Básicos
+   - Números e Horas
+   - Vocabulário por Categorias
+4. **Adicionar exercícios** baseados no conteúdo
+5. **Criar flashcards** com vocabulário extraído
+
+### Comandos Úteis:
+
+```bash
+# Ver estatísticas do arquivo
+wc -l backend/storage/app/imports/ItalB1-25.txt  # Total de linhas
+wc -c backend/storage/app/imports/ItalB1-25.txt  # Total de caracteres
+
+# Procurar conteúdo específico
+grep -n "Alfabeto" backend/storage/app/imports/ItalB1-25.txt
+grep -n "Verbo" backend/storage/app/imports/ItalB1-25.txt
+grep -n "ESSERE\|AVERE" backend/storage/app/imports/ItalB1-25.txt
+
+# Extrair seções específicas
+sed -n '1,100p' backend/storage/app/imports/ItalB1-25.txt  # Primeiras 100 linhas
+
+# Instalar dependências OCR (se necessário em outro ambiente)
+sudo apt-get install -y tesseract-ocr tesseract-ocr-ita poppler-utils imagemagick
+```
+
+### Benefícios:
+
+✅ **Aproveitamento de Material Físico**
+- PDFs escaneados agora podem ser utilizados
+- Conteúdo valioso não fica perdido em imagens
+- Material didático profissional disponível
+
+✅ **Automação**
+- Script reutilizável para outros PDFs
+- Processo padronizado e documentado
+- Economia de tempo vs digitação manual
+
+✅ **Escalabilidade**
+- Fácil processar múltiplos PDFs
+- Suporte a diversos idiomas
+- Qualidade ajustável via DPI
+
+### Organização do Conteúdo Extraído:
+
+✅ **Script de Organização Criado:** `backend/scripts/extract_sections.py`
+
+**Funcionalidades:**
+- Separa conteúdo por módulos temáticos
+- Extrai páginas individuais do texto
+- Identifica vocabulário importante automaticamente
+- Gera arquivos JSON estruturados por módulo
+- Cria arquivo de resumo com estatísticas
+
+**Módulos Extraídos (5 módulos):**
+
+1. **Módulo 01: Alfabeto e Fonética** (Páginas 1-3)
+   - 📝 4.084 caracteres
+   - 📚 30 palavras de vocabulário
+   - 🎯 Nível: A1
+   - Conteúdo: Alfabeto completo, pronúncia, sons de C/G, GLI, SCI, GN
+
+2. **Módulo 02: Saudações e Apresentações** (Páginas 3-4)
+   - 📝 2.180 caracteres
+   - 📚 30 palavras de vocabulário
+   - 🎯 Nível: A1
+   - Conteúdo: Ciao, Buongiorno, verbo CHIAMARSI, formal vs informal
+
+3. **Módulo 03: Verbos ESSERE, AVERE, STARE** (Páginas 4-8)
+   - 📝 4.775 caracteres
+   - 📚 30 palavras de vocabulário
+   - 🎯 Nível: A1
+   - Conteúdo: Conjugações, uso de verbos fundamentais
+
+4. **Módulo 04: Artigos e Gênero** (Páginas 8-15)
+   - 📝 8.338 caracteres
+   - 📚 30 palavras de vocabulário
+   - 🎯 Nível: A1
+   - Conteúdo: Artigos definidos/indefinidos, masculino/feminino
+
+5. **Módulo 05: Números, Datas e Horas** (Páginas 15-25)
+   - 📝 13.975 caracteres
+   - 📚 30 palavras de vocabulário
+   - 🎯 Nível: A1
+   - Conteúdo: Números, dias, meses, estações, horas
+
+**Arquivos Gerados:**
+```
+backend/storage/app/imports/modules_extracted/
+├── modulo_01_alfabeto.json
+├── modulo_02_saudacoes.json
+├── modulo_03_verbos.json
+├── modulo_04_artigos.json
+├── modulo_05_numeros.json
+└── SUMMARY.json
+```
+
+**Formato JSON dos Módulos:**
+```json
+{
+  "module_id": "modulo_01_alfabeto",
+  "module_name": "Alfabeto e Fonética",
+  "level": "A1",
+  "content_italian": "...",
+  "content_portuguese": "",
+  "vocabulary": ["palavra1", "palavra2", ...],
+  "keywords": ["alfabeto", "lettere", "pronuncia"],
+  "estimated_time": 30,
+  "difficulty": 2,
+  "lesson_type": "grammar",
+  "notes": "Conteúdo extraído de ItalB1-25.pdf via OCR"
+}
+```
+
+**Como Usar os Módulos:**
+
+```bash
+# 1. Executar script de extração
+cd /home/dellno/worksapace/imparalingua
+python3 backend/scripts/extract_sections.py \
+  backend/storage/app/imports/ItalB1-25.txt \
+  backend/storage/app/imports/modules_extracted
+
+# 2. Ver resumo dos módulos
+cat backend/storage/app/imports/modules_extracted/SUMMARY.json
+
+# 3. Visualizar um módulo específico
+cat backend/storage/app/imports/modules_extracted/modulo_01_alfabeto.json | jq
+```
+
+**Atualização: Todos os 12 Módulos Extraídos! (19/11/2025)**
+
+✅ **EXTRAÇÃO COMPLETA REALIZADA**
+
+**Módulos Nível A1 (Iniciante):**
+1. ✅ Alfabeto e Fonética (páginas 1-3) - 4.084 chars
+2. ✅ Saudações e Apresentações (páginas 3-4) - 2.180 chars
+3. ✅ Verbos ESSERE, AVERE, STARE (páginas 4-8) - 4.775 chars
+4. ✅ Artigos e Gênero (páginas 8-15) - 8.338 chars
+5. ✅ Números, Datas e Horas (páginas 15-25) - 13.975 chars
+
+**Módulos Nível A2 (Elementar):**
+6. ✅ Verbos Regulares -ARE/-ERE/-IRE (páginas 26-35) - 12.135 chars
+7. ✅ Preposições Simples e Articuladas (páginas 36-48) - 25.594 chars
+8. ✅ Pronomes (Pessoais, Possessivos, Demonstrativos) (páginas 49-58) - 14.973 chars
+9. ✅ Passato Prossimo (páginas 59-63) - 7.403 chars
+
+**Módulos Nível B1 (Intermediário):**
+10. ✅ Imperfetto (páginas 64-68) - 7.195 chars
+11. ✅ Futuro Semplice (páginas 69-75) - 5.883 chars
+12. ✅ Condizionale (páginas 76-85) - 6.379 chars
+
+**Estatísticas Totais:**
+- 📚 **12 módulos completos** extraídos e estruturados
+- 📝 **112.914 caracteres** de conteúdo organizado
+- 📊 **358 palavras** de vocabulário identificadas
+- 📖 **85 páginas** do PDF processadas (1-85)
+- 🎯 **3 níveis** cobertos (A1, A2, B1)
+
+**Próximos Passos:**
+1. ✅ Conteúdo extraído e organizado em 12 módulos
+2. [ ] Revisar e formatar conteúdo em HTML
+3. [ ] Adicionar traduções em português
+4. [ ] Criar exercícios para cada módulo (10-15 por módulo)
+5. [ ] Desenvolver seeder para importar módulos no banco
+6. [ ] Criar novo curso "Italiano Completo A1-B1"
+
+**Arquivos Disponíveis:**
+```
+backend/storage/app/imports/modules_extracted_complete/
+├── modulo_01_alfabeto.json
+├── modulo_02_saudacoes.json
+├── modulo_03_verbos.json
+├── modulo_04_artigos.json
+├── modulo_05_numeros.json
+├── modulo_06_verbos_regulares.json
+├── modulo_07_preposicoes.json
+├── modulo_08_pronomes.json
+├── modulo_09_passato_prossimo.json
+├── modulo_10_imperfetto.json
+├── modulo_11_futuro.json
+├── modulo_12_condizionale.json
+└── SUMMARY.json
+```
+
+**Plano Completo:**
+Documento detalhado em: `backend/storage/app/imports/PLANO_ORGANIZACAO_ITALB1.md`
+- ✅ 12 módulos extraídos (A1 a B1)
+- 🎯 20-30 lições a criar
+- ⏱️ 15-20 horas de conteúdo total
+- 📝 150-200 exercícios previstos
+
+---
+
 ## 14. ✅ Frontend Vue.js Implementado
 
 **Status: IMPLEMENTADO EM 15/11/2025**
